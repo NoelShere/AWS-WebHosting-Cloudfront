@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Interview Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --aws-orange: #FF9900;
+    --aws-orange-dim: #CC7A00;
+    --aws-orange-glow: rgba(255,153,0,0.12);
+    --bg-base: #0d1117;
+    --bg-card: #161b22;
+    --bg-card2: #1c2330;
+    --bg-hover: #21262d;
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(255,153,0,0.3);
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #484f58;
+    --green: #3fb950;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --red: #f85149;
+    --teal: #39d353;
+    --amber: #d29922;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(180deg, #0d1117 0%, #0d1117 60%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-badge {
+    background: var(--aws-orange);
+    color: #000;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: .04em;
+    flex-shrink: 0;
+  }
+  .site-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -.02em;
+  }
+  .site-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 1px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+  .header-meta span { color: var(--aws-orange); }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 4rem;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+    padding-top: 0.5rem;
+  }
+  .tab-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .18s ease;
+    white-space: nowrap;
+    letter-spacing: .03em;
+  }
+  .tab-btn:hover {
+    border-color: var(--border-accent);
+    color: var(--aws-orange);
+    background: var(--aws-orange-glow);
+  }
+  .tab-btn.active {
+    background: var(--aws-orange);
+    border-color: var(--aws-orange);
+    color: #000;
+    font-weight: 600;
+  }
+
+  /* ── PANELS ── */
+  .panel { display: none; animation: fadeIn .2s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--aws-orange);
+    margin: 1.5rem 0 .75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: rgba(255,153,0,0.2); }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-orange { background: var(--aws-orange); }
+  .dot-blue   { background: var(--blue); }
+  .dot-green  { background: var(--green); }
+  .dot-purple { background: var(--purple); }
+  .dot-red    { background: var(--red); }
+  .dot-teal   { background: var(--teal); }
+  .dot-amber  { background: var(--amber); }
+
+  /* ── ROW ITEMS ── */
+  .row {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 5px 0;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .row:last-child { border-bottom: none; padding-bottom: 0; }
+  .row strong {
+    color: var(--text-primary);
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .row-text { color: var(--text-secondary); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: 10px;
+    letter-spacing: .03em;
+    flex-shrink: 0;
+  }
+  .badge-orange { background: rgba(255,153,0,0.15); color: var(--aws-orange); border: 1px solid rgba(255,153,0,0.3); }
+  .badge-blue   { background: rgba(88,166,255,0.1);  color: var(--blue);   border: 1px solid rgba(88,166,255,0.25); }
+  .badge-green  { background: rgba(63,185,80,0.1);   color: var(--green);  border: 1px solid rgba(63,185,80,0.25); }
+  .badge-purple { background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); }
+  .badge-red    { background: rgba(248,81,73,0.1);   color: var(--red);    border: 1px solid rgba(248,81,73,0.25); }
+  .badge-amber  { background: rgba(210,153,34,0.1);  color: var(--amber);  border: 1px solid rgba(210,153,34,0.25); }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 520px;
+  }
+  table.cmp thead {
+    background: var(--bg-card2);
+  }
+  table.cmp th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.cmp td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  table.cmp tr:last-child td { border-bottom: none; }
+  table.cmp td:first-child {
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+  }
+  table.cmp tr:hover td { background: var(--bg-hover); }
+
+  /* ── TIP BOX ── */
+  .tip {
+    background: rgba(255,153,0,0.06);
+    border: 1px solid rgba(255,153,0,0.2);
+    border-left: 3px solid var(--aws-orange);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  .tip strong { color: var(--aws-orange); }
+
+  /* ── SHARED RESPONSIBILITY BOXES ── */
+  .shr-box {
+    border-radius: var(--radius-lg);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+  }
+  .shr-aws  { border-left: 3px solid var(--blue); background: rgba(88,166,255,0.05); }
+  .shr-cust { border-left: 3px solid var(--green); background: rgba(63,185,80,0.05); }
+  .shr-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: .03em;
+  }
+  .shr-aws  .shr-title { color: var(--blue); }
+  .shr-cust .shr-title { color: var(--green); }
+  .shr-item { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* ── PILLARS ── */
+  .pillar {
+    border-left: 3px solid;
+    padding: 10px 14px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 8px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .p-op   { border-left-color: var(--blue); }
+  .p-sec  { border-left-color: var(--red); }
+  .p-rel  { border-left-color: var(--green); }
+  .p-perf { border-left-color: var(--amber); }
+  .p-cost { border-left-color: var(--purple); }
+  .p-sus  { border-left-color: var(--teal); }
+  .pillar-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    margin-bottom: 2px;
+    color: var(--text-muted);
+  }
+  .pillar-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .pillar-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* ── PILL ROW ── */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--bg-card);
+  }
+
+  /* ── QA CARDS ── */
+  .qa-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  .qa-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--aws-orange);
+    margin-bottom: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+  }
+  .qa-a { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .qa-a strong { color: var(--text-primary); font-weight: 500; }
+
+  /* ── DR TABLE highlight ── */
+  .dr-cost { font-family: 'IBM Plex Mono', monospace; color: var(--amber); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .footer span { color: var(--aws-orange); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .site-header { padding: 1rem; }
+    .container { padding: 1rem 1rem 4rem; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .header-meta { display: none; }
+  }
+  @media (max-width: 480px) {
+    .site-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-badge">AWS</div>
+      <div>
+        <div class="site-title">Interview Cheat Sheet</div>
+        <div class="site-subtitle">Cloud Practitioner + Entry-Level Cloud / IT Roles</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div>33+ Regions &nbsp;·&nbsp; 105+ AZs &nbsp;·&nbsp; 400+ Edge Locations</div>
+      <div style="margin-top:2px;">CCP · SAA · SysOps · Developer</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<main class="container">
+
+  <!-- ── TABS ── -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="tab-btn active" onclick="show('core', this)"      role="tab">Core Services</button>
+    <button class="tab-btn"        onclick="show('compute', this)"   role="tab">Compute</button>
+    <button class="tab-btn"        onclick="show('storage', this)"   role="tab">Storage</button>
+    <button class="tab-btn"        onclick="show('db', this)"        role="tab">Databases</button>
+    <button class="tab-btn"        onclick="show('network', this)"   role="tab">Networking</button>
+    <button class="tab-btn"        onclick="show('security', this)"  role="tab">Security &amp; IAM</button>
+    <button class="tab-btn"        onclick="show('monitor', this)"   role="tab">Monitoring</button>
+    <button class="tab-btn"        onclick="show('serverless', this)"role="tab">Serverless</button>
+    <button class="tab-btn"        onclick="show('ha', this)"        role="tab">HA &amp; DR</button>
+    <button class="tab-btn"        onclick="show('waf', this)"       role="tab">Well-Architected</button>
+    <button class="tab-btn"        onclick="show('pricing', this)"   role="tab">Pricing</button>
+    <button class="tab-btn"        onclick="show('recall', this)"    role="tab">Quick Recall</button>
+  </nav>
+
+  <!-- ═══════════════════ PANEL: CORE SERVICES ═══════════════════ -->
+  <section id="p-core" class="panel active">
+    <div class="section-label">The Big Six — Know These Cold</div>
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>EC2 — Elastic Compute Cloud</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Virtual machines (instances) running in AWS data centers</span></div>
+        <div class="row"><strong>Purchasing:</strong><span class="row-text">On-Demand, Reserved (1/3yr), Spot, Savings Plans, Dedicated Host</span></div>
+        <div class="row"><strong>Billing:</strong><span class="row-text">Per second (Linux/Ubuntu) or per hour (Windows, RHEL)</span></div>
+        <div class="row"><strong>Families:</strong><span class="row-text">t/m (general), c (compute), r/x (memory), p/g (GPU), i/d (storage)</span></div>
+        <div class="row"><strong>Key feature:</strong><span class="row-text">User Data scripts run on first boot to auto-configure instances</span></div>
+        <div class="row"><strong>AMI:</strong><span class="row-text">Amazon Machine Image — template (OS + software) used to launch instances</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-amber"></span>S3 — Simple Storage Service</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Object storage for files, images, backups, logs, static websites</span></div>
+        <div class="row"><strong>Durability:</strong><span class="row-text">99.999999999% (eleven nines) — replicated across ≥ 3 AZs</span></div>
+        <div class="row"><strong>Max object size:</strong><span class="row-text">5 TB per object (multipart upload required above 5 GB)</span></div>
+        <div class="row"><strong>Storage classes:</strong><span class="row-text">Standard, IA, One Zone-IA, Glacier Instant/Flexible/Deep Archive, Intelligent-Tiering</span></div>
+        <div class="row"><strong>Not for:</strong><span class="row-text">Block storage or OS drives — use EBS for that</span></div>
+        <div class="row"><strong>Buckets:</strong><span class="row-text">Globally unique name; data stored in a specific region</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>IAM — Identity &amp; Access Management</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Controls who can access which AWS resources and how</span></div>
+        <div class="row"><strong>Entities:</strong><span class="row-text">Users (people/apps), Groups (collections of users), Roles (temporary credentials), Policies (JSON permission docs)</span></div>
+        <div class="row"><strong>Root account:</strong><span class="row-text">Never use for daily tasks; lock with MFA immediately</span></div>
+        <div class="row"><strong>Principle:</strong><span class="row-text">Least privilege — grant only the permissions required</span></div>
+        <div class="row"><strong>Roles:</strong><span class="row-text">Used by AWS services (e.g., EC2 to access S3); avoids hardcoding credentials</span></div>
+        <div class="row"><strong>Global:</strong><span class="row-text">IAM is not region-specific — applies across all regions</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-teal"></span>VPC — Virtual Private Cloud</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Your own logically isolated network within AWS</span></div>
+        <div class="row"><strong>Subnets:</strong><span class="row-text">Public (has route to IGW) vs Private (no direct internet access)</span></div>
+        <div class="row"><strong>IGW:</strong><span class="row-text">Internet Gateway — attaches to VPC, enables internet access for public subnets</span></div>
+        <div class="row"><strong>NAT Gateway:</strong><span class="row-text">Lets private subnet instances reach internet outbound; blocks inbound</span></div>
+        <div class="row"><strong>Default VPC:</strong><span class="row-text">Each AWS account gets one default VPC per region (CIDR: 172.31.0.0/16)</span></div>
+        <div class="row"><strong>CIDR:</strong><span class="row-text">IP range of the VPC, e.g. 10.0.0.0/16 (65,536 IPs)</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>RDS — Relational Database Service</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Fully managed SQL databases — AWS handles patching, backups, HA</span></div>
+        <div class="row"><strong>Engines:</strong><span class="row-text">MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Aurora</span></div>
+        <div class="row"><strong>Multi-AZ:</strong><span class="row-text">Synchronous standby replica in another AZ; auto failover (HA, not read scaling)</span></div>
+        <div class="row"><strong>Read Replicas:</strong><span class="row-text">Asynchronous; for read scaling; can be cross-region; not for failover</span></div>
+        <div class="row"><strong>Backups:</strong><span class="row-text">Automated backups 1–35 day retention + manual snapshots</span></div>
+        <div class="row"><strong>Not for:</strong><span class="row-text">NoSQL or key-value workloads — use DynamoDB instead</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot dot-purple"></span>Lambda</div>
+        <div class="row"><strong>What it is:</strong><span class="row-text">Run code without provisioning or managing servers (serverless/FaaS)</span></div>
+        <div class="row"><strong>Triggers:</strong><span class="row-text">S3 events, API Gateway, SQS, SNS, DynamoDB Streams, CloudWatch, EventBridge</span></div>
+        <div class="row"><strong>Pricing:</strong><span class="row-text">Pay per request ($0.20/1M requests) + duration rounded to 1ms</span></div>
+        <div class="row"><strong>Limits:</strong><span class="row-text">Max 15 min timeout; 128 MB – 10 GB memory; 512 MB–10 GB ephemeral /tmp</span></div>
+        <div class="row"><strong>Concurrency:</strong><span class="row-text">Default 1,000 concurrent executions per region (soft limit; can increase)</span></div>
+        <div class="row"><strong>Cold start:</strong><span class="row-text">First invocation latency; mitigate with Provisioned Concurrency</span></div>
+      </div>
+
+    </div>
+    <div class="tip"><strong>Interview tip:</strong> Know the compute model differences — EC2 (IaaS, you manage OS), Elastic Beanstalk (PaaS, AWS manages infra), Lambda (FaaS, serverless), ECS/EKS (containers). They'll ask "which would you use for X?"</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: COMPUTE ═══════════════════ -->
+  <section id="p-compute" class="panel">
+
+    <div class="section-label">EC2 Purchasing Options</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Type</th><th>Savings</th><th>Commitment</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>On-Demand</td><td>—</td><td>None</td><td>Short-term, unpredictable workloads; testing</td></tr>
+          <tr><td>Reserved Instances (Standard)</td><td>Up to 72%</td><td>1 or 3 years</td><td>Steady-state, predictable usage (specific instance type/region)</td></tr>
+          <tr><td>Reserved Instances (Convertible)</td><td>Up to 54%</td><td>1 or 3 years</td><td>Steady-state but need flexibility to change instance type</td></tr>
+          <tr><td>Savings Plans (Compute)</td><td>Up to 66%</td><td>1 or 3 years</td><td>Flexible — applies to EC2, Lambda, Fargate across any region/family</td></tr>
+          <tr><td>Savings Plans (EC2 Instance)</td><td>Up to 72%</td><td>1 or 3 years</td><td>Like Standard RI but more flexible (any size/OS in a family/region)</td></tr>
+          <tr><td>Spot Instances</td><td>Up to 90%</td><td>None (interruptible)</td><td>Fault-tolerant batch jobs, CI/CD, big data, stateless web</td></tr>
+          <tr><td>Dedicated Instances</td><td>—</td><td>On-Demand pricing</td><td>Single-tenant hardware; shared hardware within your account</td></tr>
+          <tr><td>Dedicated Hosts</td><td>—</td><td>On-Demand or Reserved</td><td>Compliance, BYOL (Bring Your Own License) requirements</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">EC2 Instance Families</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Instance Types</div>
+        <div class="row"><strong>t, m:</strong><span class="row-text">General purpose — balanced CPU/memory/network <span class="badge badge-blue">Default choice</span></span></div>
+        <div class="row"><strong>c:</strong><span class="row-text">Compute optimized — high CPU-to-memory ratio; gaming, HPC, batch</span></div>
+        <div class="row"><strong>r, x, z:</strong><span class="row-text">Memory optimized — high RAM; in-memory DBs, real-time big data</span></div>
+        <div class="row"><strong>p, g, inf, trn:</strong><span class="row-text">Accelerated computing — GPU, ML training/inference</span></div>
+        <div class="row"><strong>i, d, h:</strong><span class="row-text">Storage optimized — high sequential I/O; NVMe SSD, Hadoop</span></div>
+        <div class="row"><strong>Naming:</strong><span class="row-text">e.g. <code>m5.xlarge</code> — family(m) + generation(5) + size(xlarge)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Other Compute Services</div>
+        <div class="row"><strong>Elastic Beanstalk:</strong><span class="row-text">PaaS — deploy code, AWS handles load balancing/scaling/patching</span></div>
+        <div class="row"><strong>ECS:</strong><span class="row-text">Elastic Container Service — managed Docker orchestration (AWS proprietary)</span></div>
+        <div class="row"><strong>EKS:</strong><span class="row-text">Elastic Kubernetes Service — managed Kubernetes control plane</span></div>
+        <div class="row"><strong>Fargate:</strong><span class="row-text">Serverless containers — no EC2 instances to manage; works with ECS &amp; EKS</span></div>
+        <div class="row"><strong>Lightsail:</strong><span class="row-text">Simple VPS — fixed monthly price; good for small projects/beginners</span></div>
+        <div class="row"><strong>AWS Batch:</strong><span class="row-text">Fully managed batch computing at any scale using EC2/Spot/Fargate</span></div>
+        <div class="row"><strong>Outposts:</strong><span class="row-text">AWS hardware in your on-prem data center for hybrid cloud</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">EC2 Storage Options</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Storage type</th><th>Persistence</th><th>Scope</th><th>Use case</th></tr></thead>
+        <tbody>
+          <tr><td>Instance Store</td><td>Ephemeral — lost on stop/terminate</td><td>Local to host</td><td>Temp buffer, cache; highest I/O performance</td></tr>
+          <tr><td>EBS gp3 (SSD)</td><td>Persistent</td><td>One AZ, one instance at a time*</td><td>OS volumes, databases, general workloads</td></tr>
+          <tr><td>EBS io2 Block Express</td><td>Persistent</td><td>One AZ</td><td>Latency-sensitive databases (SAP HANA, Oracle)</td></tr>
+          <tr><td>EBS st1 / sc1 (HDD)</td><td>Persistent</td><td>One AZ</td><td>Throughput-heavy, sequential (log processing, cold data)</td></tr>
+          <tr><td>EFS (NFS)</td><td>Persistent</td><td>Multi-AZ, multi-instance</td><td>Shared file system across many EC2 instances</td></tr>
+          <tr><td>S3</td><td>Persistent</td><td>Regional, globally accessible</td><td>Object storage — backups, media, static content</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>Key distinction:</strong> EBS is locked to one AZ (you CAN use EBS Multi-Attach with io1/io2 on a limited basis). EFS spans multiple AZs automatically. S3 is not mounted like a drive — it's accessed via API/URL.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: STORAGE ═══════════════════ -->
+  <section id="p-storage" class="panel">
+
+    <div class="section-label">S3 Storage Classes — Cost vs Access Speed</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Class</th><th>Retrieval speed</th><th>Min storage</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>S3 Standard</td><td>Instant (ms)</td><td>None</td><td>Frequently accessed data; web assets, active content</td></tr>
+          <tr><td>S3 Intelligent-Tiering</td><td>Instant (ms)</td><td>None</td><td>Unknown or changing access patterns; auto-optimizes cost</td></tr>
+          <tr><td>S3 Standard-IA</td><td>Instant (ms, retrieval fee applies)</td><td>30 days</td><td>Infrequent access; disaster recovery backups</td></tr>
+          <tr><td>S3 One Zone-IA</td><td>Instant (ms, retrieval fee applies)</td><td>30 days</td><td>Infrequent, reproducible data; only one AZ (risk of loss)</td></tr>
+          <tr><td>S3 Glacier Instant Retrieval</td><td>Milliseconds</td><td>90 days</td><td>Archived data accessed ~once a quarter</td></tr>
+          <tr><td>S3 Glacier Flexible Retrieval</td><td>Minutes to 12 hours</td><td>90 days</td><td>Long-term backup archives with occasional retrieval</td></tr>
+          <tr><td>S3 Glacier Deep Archive</td><td>12–48 hours</td><td>180 days</td><td>7–10 year regulatory retention; lowest cost storage in AWS</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">S3 Key Features</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Access &amp; Security</div>
+        <div class="row"><strong>Bucket policies:</strong><span class="row-text">JSON resource-based policies — grant/deny access to bucket/objects</span></div>
+        <div class="row"><strong>Block Public Access:</strong><span class="row-text">Account or bucket level setting — always enable unless you have a specific reason not to</span></div>
+        <div class="row"><strong>Server-side encryption:</strong><span class="row-text">SSE-S3 (AWS-managed keys), SSE-KMS (your KMS key), SSE-C (customer-provided key)</span></div>
+        <div class="row"><strong>Presigned URLs:</strong><span class="row-text">Time-limited, temporary access URLs for private objects (e.g. download link that expires)</span></div>
+        <div class="row"><strong>ACLs:</strong><span class="row-text">Legacy per-object access control; AWS recommends bucket policies instead</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Functionality</div>
+        <div class="row"><strong>Versioning:</strong><span class="row-text">Keep all versions of every object; protects against accidental deletion/overwrites</span></div>
+        <div class="row"><strong>Lifecycle rules:</strong><span class="row-text">Automatically transition objects to cheaper classes or expire them by age</span></div>
+        <div class="row"><strong>Replication:</strong><span class="row-text">CRR (cross-region replication) for compliance/latency; SRR (same-region) for log aggregation</span></div>
+        <div class="row"><strong>Static website hosting:</strong><span class="row-text">Serve HTML/CSS/JS files directly from S3 with a public endpoint</span></div>
+        <div class="row"><strong>Event notifications:</strong><span class="row-text">Trigger Lambda, SQS, or SNS on object PUT/DELETE events</span></div>
+        <div class="row"><strong>S3 Select:</strong><span class="row-text">Query CSV/JSON/Parquet data in-place with SQL — no download needed</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Other Storage Services</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Block &amp; File Storage</div>
+        <div class="row"><strong>EBS volumes:</strong><span class="row-text">gp2/gp3 (SSD, general), io1/io2 (provisioned IOPS), st1/sc1 (HDD)</span></div>
+        <div class="row"><strong>EBS Snapshots:</strong><span class="row-text">Point-in-time backups stored in S3; incremental; can copy cross-region</span></div>
+        <div class="row"><strong>EFS:</strong><span class="row-text">Elastic NFS file system; auto-scales; Linux workloads; two modes: Standard and One Zone</span></div>
+        <div class="row"><strong>FSx for Windows:</strong><span class="row-text">Managed Windows File Server (SMB protocol, Active Directory integration)</span></div>
+        <div class="row"><strong>FSx for Lustre:</strong><span class="row-text">High-performance parallel file system for HPC, ML, video processing</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Data Transfer &amp; Hybrid</div>
+        <div class="row"><strong>Storage Gateway:</strong><span class="row-text">Bridge on-prem to AWS — File Gateway (S3), Volume Gateway (EBS), Tape Gateway (Glacier)</span></div>
+        <div class="row"><strong>AWS DataSync:</strong><span class="row-text">Automate data transfer between on-prem/S3/EFS/FSx; up to 10x faster than manual</span></div>
+        <div class="row"><strong>Snowcone:</strong><span class="row-text">Smallest Snow device — 8 TB usable; portable, rugged</span></div>
+        <div class="row"><strong>Snowball Edge:</strong><span class="row-text">80 TB usable; Storage Optimized or Compute Optimized variant; edge processing</span></div>
+        <div class="row"><strong>Snowmobile:</strong><span class="row-text">Exabyte-scale — 100 PB per truck; for massive data center migrations</span></div>
+        <div class="row"><strong>AWS Backup:</strong><span class="row-text">Centralized, policy-based backup across EC2, RDS, DynamoDB, EFS, S3, etc.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: DATABASES ═══════════════════ -->
+  <section id="p-db" class="panel">
+
+    <div class="section-label">Choosing the Right Database</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Service</th><th>Type</th><th>Best for</th><th>Key fact</th></tr></thead>
+        <tbody>
+          <tr><td>RDS</td><td>Relational (SQL)</td><td>OLTP; traditional apps needing ACID compliance</td><td>Managed; supports 6 engines</td></tr>
+          <tr><td>Aurora</td><td>Relational (MySQL/PostgreSQL compatible)</td><td>High-throughput SQL; production workloads</td><td>Up to 5× faster than MySQL; auto-healing, 6-copy replication across 3 AZs</td></tr>
+          <tr><td>Aurora Serverless v2</td><td>Relational</td><td>Variable/unpredictable workloads</td><td>Scales in fractions of ACUs; pay per use</td></tr>
+          <tr><td>DynamoDB</td><td>NoSQL (key-value + document)</td><td>Serverless, single-digit ms latency, massive scale</td><td>Fully managed; auto-scales; no server to manage</td></tr>
+          <tr><td>ElastiCache for Redis</td><td>In-memory cache</td><td>Session management, leaderboards, pub/sub, caching</td><td>Sub-millisecond; supports rich data types</td></tr>
+          <tr><td>ElastiCache for Memcached</td><td>In-memory cache</td><td>Simple distributed caching (key-value only)</td><td>Multi-threaded; simpler than Redis</td></tr>
+          <tr><td>Redshift</td><td>Data warehouse (columnar SQL)</td><td>OLAP — analytics, BI, large-scale reporting</td><td>Petabyte-scale; Redshift Spectrum queries S3 directly</td></tr>
+          <tr><td>DocumentDB</td><td>Document (MongoDB-compatible)</td><td>JSON document storage; content catalogs, user profiles</td><td>Not actual MongoDB — AWS-built compatible engine</td></tr>
+          <tr><td>Neptune</td><td>Graph</td><td>Social networks, fraud detection, knowledge graphs</td><td>Supports Gremlin and SPARQL</td></tr>
+          <tr><td>Timestream</td><td>Time-series</td><td>IoT sensor data, telemetry, operational metrics</td><td>Auto-scales; faster and cheaper than relational for time-series</td></tr>
+          <tr><td>QLDB</td><td>Ledger (immutable)</td><td>Financial audit trails, supply chain provenance</td><td>Cryptographically verifiable transaction log</td></tr>
+          <tr><td>Keyspaces</td><td>Wide column (Cassandra-compatible)</td><td>Cassandra workloads without managing infrastructure</td><td>Serverless; pay per use</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">RDS vs Aurora vs DynamoDB Deep Dive</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>RDS — Multi-AZ vs Read Replicas</div>
+        <div class="row"><strong>Multi-AZ:</strong><span class="row-text">Synchronous standby; auto-failover ~60s; for HA not performance</span></div>
+        <div class="row"><strong>Read Replicas:</strong><span class="row-text">Asynchronous copy; scale read traffic; up to 5 per DB</span></div>
+        <div class="row"><strong>Cross-region RR:</strong><span class="row-text">Read Replicas can be in different regions (disaster recovery + low latency reads)</span></div>
+        <div class="row"><strong>Promote RR:</strong><span class="row-text">Can promote a Read Replica to a standalone DB (breaks replication)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>Aurora Extras</div>
+        <div class="row"><strong>Storage:</strong><span class="row-text">Auto-grows in 10 GB increments up to 128 TB; 6 copies across 3 AZs</span></div>
+        <div class="row"><strong>Read Replicas:</strong><span class="row-text">Up to 15 Aurora Read Replicas with sub-10ms replication lag</span></div>
+        <div class="row"><strong>Failover:</strong><span class="row-text">Automatic, faster than RDS Multi-AZ (~30s)</span></div>
+        <div class="row"><strong>Global Database:</strong><span class="row-text">Primary + up to 5 read-only regions; &lt;1s replication lag</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-purple"></span>DynamoDB Key Concepts</div>
+        <div class="row"><strong>Primary key:</strong><span class="row-text">Partition key alone, or partition key + sort key (composite)</span></div>
+        <div class="row"><strong>Capacity modes:</strong><span class="row-text">Provisioned (RCU/WCU) or On-Demand (pay per request)</span></div>
+        <div class="row"><strong>GSI/LSI:</strong><span class="row-text">Global Secondary Index (any attributes, cross-partition); Local (same partition, sort key only)</span></div>
+        <div class="row"><strong>DynamoDB Streams:</strong><span class="row-text">Ordered log of item-level changes — trigger Lambda in real time</span></div>
+        <div class="row"><strong>DAX:</strong><span class="row-text">DynamoDB Accelerator — in-memory cache; microsecond reads</span></div>
+        <div class="row"><strong>TTL:</strong><span class="row-text">Automatically delete items by timestamp attribute (no RCU charge)</span></div>
+      </div>
+    </div>
+    <div class="tip"><strong>Remember:</strong> RDS = managed SQL (you choose engine). Aurora = AWS-optimized MySQL/PostgreSQL (faster, better HA). DynamoDB = NoSQL, serverless, infinite horizontal scale. ElastiCache sits in front of any DB to cache hot reads.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: NETWORKING ═══════════════════ -->
+  <section id="p-network" class="panel">
+
+    <div class="section-label">VPC Core Components</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">VPC Building Blocks</div>
+        <div class="row"><strong>Subnet:</strong><span class="row-text">Divides VPC CIDR into smaller ranges; tied to one AZ; public (route to IGW) or private</span></div>
+        <div class="row"><strong>Route Table:</strong><span class="row-text">Rules controlling where traffic is directed; each subnet associates with one route table</span></div>
+        <div class="row"><strong>Internet Gateway (IGW):</strong><span class="row-text">Horizontally scaled, HA gateway; attaches to VPC for internet access</span></div>
+        <div class="row"><strong>NAT Gateway:</strong><span class="row-text">Managed service in public subnet; lets private instances initiate internet connections (outbound only)</span></div>
+        <div class="row"><strong>Elastic IP:</strong><span class="row-text">Static public IPv4 address; associated with an instance or NAT Gateway</span></div>
+        <div class="row"><strong>VPC Endpoints:</strong><span class="row-text">Private connection to AWS services (S3, DynamoDB) without internet; Gateway or Interface type</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">VPC Connectivity</div>
+        <div class="row"><strong>VPC Peering:</strong><span class="row-text">1-to-1 private connection between VPCs (same or different account/region); not transitive</span></div>
+        <div class="row"><strong>Transit Gateway:</strong><span class="row-text">Hub-and-spoke router; connect thousands of VPCs + on-prem; IS transitive</span></div>
+        <div class="row"><strong>VPN (Site-to-Site):</strong><span class="row-text">Encrypted IPSec tunnel from on-prem to AWS over public internet</span></div>
+        <div class="row"><strong>Client VPN:</strong><span class="row-text">OpenVPN-based; individual users connect to VPC securely</span></div>
+        <div class="row"><strong>Direct Connect:</strong><span class="row-text">Dedicated private fiber link to AWS; consistent bandwidth; NOT over internet; 1 Gbps or 10 Gbps</span></div>
+        <div class="row"><strong>PrivateLink:</strong><span class="row-text">Expose your service to other VPCs privately via Interface VPC Endpoints</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Security Groups vs NACLs — Critical Distinction</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Feature</th><th>Security Groups</th><th>Network ACLs (NACLs)</th></tr></thead>
+        <tbody>
+          <tr><td>Level</td><td>Instance level (ENI)</td><td>Subnet level</td></tr>
+          <tr><td>State</td><td>Stateful — return traffic automatically allowed</td><td>Stateless — must explicitly allow inbound AND outbound</td></tr>
+          <tr><td>Rules</td><td>Allow rules only; no deny rules</td><td>Allow AND deny rules; evaluated in order by rule number</td></tr>
+          <tr><td>Default behavior</td><td>Deny all inbound, allow all outbound</td><td>Default NACL allows all; custom NACL denies all until rules added</td></tr>
+          <tr><td>Rule evaluation</td><td>All rules evaluated together</td><td>Rules evaluated lowest number first; stops at first match</td></tr>
+          <tr><td>Association</td><td>Multiple SGs per instance</td><td>One NACL per subnet</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Traffic Distribution &amp; CDN</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>Elastic Load Balancer (ELB)</div>
+        <div class="row"><strong>ALB:</strong><span class="row-text">HTTP/HTTPS Layer 7; path-based &amp; host-based routing; ideal for microservices</span></div>
+        <div class="row"><strong>NLB:</strong><span class="row-text">TCP/UDP Layer 4; ultra-low latency; handles millions of requests/sec; static IP</span></div>
+        <div class="row"><strong>GWLB:</strong><span class="row-text">Layer 3; distributes traffic to 3rd-party virtual appliances (firewalls, IDS/IPS)</span></div>
+        <div class="row"><strong>CLB:</strong><span class="row-text">Classic LB (legacy) — Layer 4 &amp; 7; avoid for new architectures</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>CloudFront (CDN)</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Content Delivery Network — caches content at 400+ global Edge Locations</span></div>
+        <div class="row"><strong>Origins:</strong><span class="row-text">S3, ALB, EC2, or any custom HTTP endpoint</span></div>
+        <div class="row"><strong>Cache:</strong><span class="row-text">Reduce latency + offload origin traffic; configurable TTL per behavior</span></div>
+        <div class="row"><strong>Security:</strong><span class="row-text">Integrates with WAF, Shield; HTTPS only; OAC/OAI to restrict direct S3 access</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>Route 53</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Managed authoritative DNS; domain registration; health checks</span></div>
+        <div class="row"><strong>Simple:</strong><span class="row-text">One record → one value; no health checks</span></div>
+        <div class="row"><strong>Weighted:</strong><span class="row-text">Split traffic by percentage — A/B testing, canary deployments</span></div>
+        <div class="row"><strong>Latency-based:</strong><span class="row-text">Route to region with lowest network latency</span></div>
+        <div class="row"><strong>Failover:</strong><span class="row-text">Active-passive; switch to secondary if health check fails</span></div>
+        <div class="row"><strong>Geolocation/Geoproximity:</strong><span class="row-text">Route based on user's geographic location</span></div>
+      </div>
+    </div>
+    <div class="tip"><strong>Stateless vs Stateful explained:</strong> Security Groups are stateful — if you allow port 443 inbound, the response traffic on ephemeral ports is automatically allowed back out. NACLs are stateless — you must explicitly create both the inbound allow rule AND the outbound allow rule for the same connection.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: SECURITY & IAM ═══════════════════ -->
+  <section id="p-security" class="panel">
+
+    <div class="section-label">Shared Responsibility Model</div>
+    <div class="shr-box shr-aws">
+      <div class="shr-title">AWS RESPONSIBILITY — "Security OF the Cloud"</div>
+      <div class="shr-item">Physical data centers &amp; buildings &nbsp;·&nbsp; Power &amp; cooling &amp; network hardware &nbsp;·&nbsp; Hypervisor &amp; host OS &nbsp;·&nbsp; Managed service software (e.g. RDS engine patching, S3 hardware) &nbsp;·&nbsp; Global fiber network &amp; edge infrastructure</div>
+    </div>
+    <div class="shr-box shr-cust">
+      <div class="shr-title">CUSTOMER RESPONSIBILITY — "Security IN the Cloud"</div>
+      <div class="shr-item">Guest OS patching on EC2 &nbsp;·&nbsp; Application code security &nbsp;·&nbsp; IAM users, roles &amp; permissions &nbsp;·&nbsp; Data encryption (at rest and in transit) &nbsp;·&nbsp; Security Group &amp; NACL configuration &nbsp;·&nbsp; Customer data &amp; classification &nbsp;·&nbsp; Network configuration (VPC, subnets, routing)</div>
+    </div>
+    <div class="tip"><strong>The line moves with managed services:</strong> For RDS, AWS patches the DB engine (their responsibility), but you configure Security Groups, IAM access, and encryption (your responsibility). For Lambda, AWS manages everything except your code and IAM permissions.</div>
+
+    <div class="section-label">IAM — Core Concepts</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">IAM Entities</div>
+        <div class="row"><strong>Root user:</strong><span class="row-text">Created with AWS account; has full access; lock away with MFA; never use for daily tasks</span></div>
+        <div class="row"><strong>IAM User:</strong><span class="row-text">Long-term credentials (username/password + access keys); represents a person or application</span></div>
+        <div class="row"><strong>IAM Group:</strong><span class="row-text">Logical collection of IAM Users; attach policies to group, not individual users</span></div>
+        <div class="row"><strong>IAM Role:</strong><span class="row-text">Temporary credentials; assumed by services, users, or cross-account principals; no long-term keys</span></div>
+        <div class="row"><strong>IAM Policy:</strong><span class="row-text">JSON document with Effect (Allow/Deny), Action, Resource, Condition fields</span></div>
+        <div class="row"><strong>Explicit Deny:</strong><span class="row-text">Always overrides any Allow — most specific denial wins</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">IAM Best Practices</div>
+        <div class="row"><strong>Enable MFA:</strong><span class="row-text">On root account and all privileged/admin users; virtual, hardware, or U2F key</span></div>
+        <div class="row"><strong>Least privilege:</strong><span class="row-text">Start with no permissions; grant only what is required for the task</span></div>
+        <div class="row"><strong>No root for daily use:</strong><span class="row-text">Create admin IAM user for day-to-day administration</span></div>
+        <div class="row"><strong>Rotate access keys:</strong><span class="row-text">Regularly rotate programmatic access keys; delete unused ones</span></div>
+        <div class="row"><strong>Use Roles, not keys:</strong><span class="row-text">Attach IAM Role to EC2 instead of embedding access keys in code</span></div>
+        <div class="row"><strong>SCP (Organizations):</strong><span class="row-text">Service Control Policies — org-wide guardrails; can restrict what even admins can do</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Security Services</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Service</th><th>What it does</th><th>Key detail</th></tr></thead>
+        <tbody>
+          <tr><td>KMS</td><td>Create, manage, and control encryption keys (CMKs)</td><td>Integrated with most AWS services; audit usage via CloudTrail</td></tr>
+          <tr><td>CloudHSM</td><td>Dedicated hardware security module in your VPC</td><td>FIPS 140-2 Level 3; you manage keys; KMS can use CloudHSM as backing store</td></tr>
+          <tr><td>Secrets Manager</td><td>Store, rotate, and retrieve secrets (DB passwords, API keys)</td><td>Auto-rotates RDS passwords; native Lambda rotation; replaces SSM Parameter Store for secrets</td></tr>
+          <tr><td>SSM Parameter Store</td><td>Hierarchical key-value store for config + secrets</td><td>Free tier for standard params; SecureString uses KMS; no auto-rotation</td></tr>
+          <tr><td>GuardDuty</td><td>Intelligent threat detection — ML-based anomaly detection</td><td>Analyzes CloudTrail, VPC Flow Logs, DNS logs; no agents; works even if logging is disabled on resources</td></tr>
+          <tr><td>Inspector</td><td>Automated vulnerability scanning</td><td>Scans EC2 (via SSM agent) and ECR container images for CVEs and network exposure</td></tr>
+          <tr><td>Macie</td><td>Discover and protect sensitive data in S3</td><td>ML-powered; finds PII, financial data, credentials; sends findings to Security Hub</td></tr>
+          <tr><td>Shield Standard</td><td>DDoS protection for all AWS customers</td><td>Free; protects against common L3/L4 attacks (SYN floods, reflection attacks)</td></tr>
+          <tr><td>Shield Advanced</td><td>Enhanced DDoS protection with 24/7 DRT access</td><td>~$3,000/month; cost protection; works with ALB, CloudFront, Route 53, EC2, EIP</td></tr>
+          <tr><td>WAF</td><td>Web Application Firewall — filter HTTP/S traffic</td><td>Protects against SQLi, XSS, rate limiting, IP blocking; applies to ALB, CloudFront, API Gateway</td></tr>
+          <tr><td>Security Hub</td><td>Central security findings aggregator and compliance dashboard</td><td>Aggregates from GuardDuty, Inspector, Macie; maps to CIS, PCI-DSS, NIST standards</td></tr>
+          <tr><td>Detective</td><td>Investigate and analyze security findings</td><td>Uses ML + graph analysis on CloudTrail, VPC Flow, GuardDuty data; for forensics</td></tr>
+          <tr><td>Cognito</td><td>User identity and authentication for web/mobile apps</td><td>User Pools (user directory, sign-up/in); Identity Pools (federate access to AWS services)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: MONITORING ═══════════════════ -->
+  <section id="p-monitor" class="panel">
+
+    <div class="section-label">The Big Three — CloudWatch vs CloudTrail vs Config</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>CloudWatch — Performance Monitoring</div>
+        <div class="row"><strong>Metrics:</strong><span class="row-text">Collect &amp; track time-series data (CPU, NetworkIn, DiskOps) from AWS services</span></div>
+        <div class="row"><strong>Custom Metrics:</strong><span class="row-text">Push your own app/infra metrics via PutMetricData API or CloudWatch Agent</span></div>
+        <div class="row"><strong>Alarms:</strong><span class="row-text">Alert when metric breaches threshold; trigger SNS, Auto Scaling, EC2 actions</span></div>
+        <div class="row"><strong>Logs:</strong><span class="row-text">Collect, store, query log data; Log Groups → Log Streams; Logs Insights for SQL-like queries</span></div>
+        <div class="row"><strong>Dashboards:</strong><span class="row-text">Cross-region, cross-account customizable monitoring views</span></div>
+        <div class="row"><strong>Events/EventBridge:</strong><span class="row-text">React to state changes in real time; schedule cron-like tasks</span></div>
+        <div class="row"><strong>Agent:</strong><span class="row-text">CloudWatch Agent required to collect memory/disk metrics from EC2 (not built-in)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-amber"></span>CloudTrail — API Audit Logging</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Records every API call made in your AWS account — who did what, when, from where</span></div>
+        <div class="row"><strong>Captures:</strong><span class="row-text">Management events (control plane) + Data events (S3 object ops, Lambda invocations) + Insight events</span></div>
+        <div class="row"><strong>Retention:</strong><span class="row-text">90-day event history free in console; deliver to S3 for indefinite retention</span></div>
+        <div class="row"><strong>Integrity:</strong><span class="row-text">Log file validation — detects if logs were tampered with (SHA-256 digest files)</span></div>
+        <div class="row"><strong>Multi-region:</strong><span class="row-text">Single trail can cover all regions; always enable in all regions</span></div>
+        <div class="row"><strong>Use for:</strong><span class="row-text">Security audits, compliance, "who deleted that resource?" investigations</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>AWS Config — Resource Compliance</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Track and record configuration changes to AWS resources over time</span></div>
+        <div class="row"><strong>Config Rules:</strong><span class="row-text">Evaluate resources against desired configurations; AWS-managed or custom Lambda rules</span></div>
+        <div class="row"><strong>Timeline:</strong><span class="row-text">See config history for any resource — what changed, when, who triggered it</span></div>
+        <div class="row"><strong>Remediation:</strong><span class="row-text">Auto-remediate non-compliant resources via SSM Automation documents</span></div>
+        <div class="row"><strong>Aggregation:</strong><span class="row-text">Config Aggregator — multi-account, multi-region compliance view</span></div>
+        <div class="row"><strong>Use for:</strong><span class="row-text">Compliance (PCI-DSS, HIPAA, SOC2), drift detection, change management</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Additional Monitoring &amp; Operations Tools</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Service</th><th>Purpose</th><th>Key detail</th></tr></thead>
+        <tbody>
+          <tr><td>X-Ray</td><td>Distributed request tracing for microservices and Lambda</td><td>Visualize service maps; find bottlenecks; debug latency; requires X-Ray SDK in app</td></tr>
+          <tr><td>Trusted Advisor</td><td>Automated best practice recommendations</td><td>5 pillars: Cost, Performance, Security, Fault Tolerance, Service Limits; Business/Enterprise plan unlocks all checks</td></tr>
+          <tr><td>AWS Health / Personal Health Dashboard</td><td>AWS service health + your account-specific events</td><td>Service Health Dashboard = global AWS status; Personal Health = your resources affected by AWS events</td></tr>
+          <tr><td>Compute Optimizer</td><td>Right-sizing recommendations to reduce cost/improve performance</td><td>Analyzes EC2, ASG, Lambda, EBS using ML; shows over-provisioned resources</td></tr>
+          <tr><td>Systems Manager (SSM)</td><td>Operations management for EC2 and on-prem instances</td><td>Session Manager (SSH without SSH/bastion), Run Command, Patch Manager, Parameter Store, Automation</td></tr>
+          <tr><td>CloudFormation</td><td>Infrastructure as Code — define AWS resources in JSON or YAML</td><td>Stack = group of resources; drift detection; rollback on failure; Change Sets to preview changes</td></tr>
+          <tr><td>CDK (Cloud Development Kit)</td><td>Define cloud infrastructure using Python, TypeScript, Java, etc.</td><td>Compiles to CloudFormation; higher-level abstractions (L1 = raw CFN, L2 = opinionated constructs)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>Classic interview trap:</strong> CloudWatch = monitor HOW your resources are performing (CPU, latency, errors). CloudTrail = WHO made API calls (audit log). Config = WHAT changed in your config over time (compliance/drift). All three are different and complementary.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: SERVERLESS ═══════════════════ -->
+  <section id="p-serverless" class="panel">
+
+    <div class="section-label">Serverless Architecture Stack</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-purple"></span>Lambda — Deep Dive</div>
+        <div class="row"><strong>Runtimes:</strong><span class="row-text">Node.js, Python, Java, Go, Ruby, .NET; or Custom Runtime (any language via bootstrap binary)</span></div>
+        <div class="row"><strong>Memory:</strong><span class="row-text">128 MB – 10,240 MB; CPU scales proportionally with memory allocation</span></div>
+        <div class="row"><strong>Timeout:</strong><span class="row-text">Max 15 minutes (900 seconds) per invocation</span></div>
+        <div class="row"><strong>Ephemeral storage:</strong><span class="row-text">/tmp — 512 MB (default) up to 10 GB; use for temp files during execution</span></div>
+        <div class="row"><strong>Layers:</strong><span class="row-text">Share code/dependencies across functions; up to 5 layers per function</span></div>
+        <div class="row"><strong>Concurrency:</strong><span class="row-text">Default 1,000 concurrent executions per region; Reserved or Provisioned Concurrency available</span></div>
+        <div class="row"><strong>Invocation types:</strong><span class="row-text">Synchronous (API GW, CLI) — wait for response; Asynchronous (S3, SNS) — fire and forget; Event Source Mapping (SQS, DynamoDB Streams, Kinesis)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>API Gateway</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Create, deploy, manage, and secure REST, HTTP, and WebSocket APIs at scale</span></div>
+        <div class="row"><strong>REST API:</strong><span class="row-text">Feature-rich — request/response transformation, usage plans, API keys, caching</span></div>
+        <div class="row"><strong>HTTP API:</strong><span class="row-text">Lower latency, lower cost; fewer features; good for Lambda proxy &amp; HTTP backends</span></div>
+        <div class="row"><strong>WebSocket API:</strong><span class="row-text">Persistent connections for real-time apps (chat, dashboards, gaming)</span></div>
+        <div class="row"><strong>Auth options:</strong><span class="row-text">IAM, Amazon Cognito User Pools, Lambda Authorizer (custom JWT/OAuth)</span></div>
+        <div class="row"><strong>Throttling:</strong><span class="row-text">10,000 requests/sec default steady-state (5,000 burst); configurable per stage</span></div>
+        <div class="row"><strong>Stages:</strong><span class="row-text">Deploy to named stages (dev, staging, prod) with independent settings</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Messaging &amp; Eventing</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-amber"></span>SQS — Simple Queue Service</div>
+        <div class="row"><strong>Standard queue:</strong><span class="row-text">At-least-once delivery; best-effort ordering; nearly unlimited throughput</span></div>
+        <div class="row"><strong>FIFO queue:</strong><span class="row-text">Exactly-once processing; strict ordering; 300 msg/s (3,000 with batching)</span></div>
+        <div class="row"><strong>Visibility timeout:</strong><span class="row-text">Period a received message is hidden from other consumers (default 30s, max 12hr)</span></div>
+        <div class="row"><strong>Message retention:</strong><span class="row-text">Default 4 days; configurable 1 minute to 14 days</span></div>
+        <div class="row"><strong>Max message size:</strong><span class="row-text">256 KB (use S3 + Extended Client Library for larger payloads)</span></div>
+        <div class="row"><strong>DLQ:</strong><span class="row-text">Dead Letter Queue — messages that fail processing N times are moved here for inspection</span></div>
+        <div class="row"><strong>Long Polling:</strong><span class="row-text">Wait up to 20s for messages to arrive — reduces empty responses and cost</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>SNS — Simple Notification Service</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Pub/Sub — publish a message once, deliver to many subscribers simultaneously</span></div>
+        <div class="row"><strong>Subscribers:</strong><span class="row-text">Lambda, SQS, HTTP/S endpoints, Email, SMS, Mobile Push (APNS, GCM)</span></div>
+        <div class="row"><strong>Fan-out pattern:</strong><span class="row-text">SNS topic → multiple SQS queues — parallel processing with different consumers</span></div>
+        <div class="row"><strong>FIFO topics:</strong><span class="row-text">Ordered, deduplication; only SQS FIFO queues can subscribe</span></div>
+        <div class="row"><strong>Message filtering:</strong><span class="row-text">Subscription filter policies — each subscriber receives only relevant messages</span></div>
+        <div class="row"><strong>SQS vs SNS:</strong><span class="row-text">SQS = pull-based queue (one consumer processes each message). SNS = push-based, all subscribers get every message.</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-teal"></span>Kinesis — Real-time Streaming</div>
+        <div class="row"><strong>Kinesis Data Streams:</strong><span class="row-text">Real-time data ingestion; shards (1 MB/s in, 2 MB/s out each); retention 1–365 days</span></div>
+        <div class="row"><strong>Kinesis Data Firehose:</strong><span class="row-text">Fully managed delivery to S3, Redshift, OpenSearch, Splunk; near real-time (~60s)</span></div>
+        <div class="row"><strong>Kinesis Data Analytics:</strong><span class="row-text">SQL or Apache Flink queries on streaming data in real time</span></div>
+        <div class="row"><strong>vs SQS:</strong><span class="row-text">Kinesis = multiple consumers, ordered per shard, replay-able. SQS = one consumer group processes &amp; deletes.</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Orchestration &amp; Events</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>Step Functions</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Orchestrate multi-step workflows as JSON-defined state machines; visual workflow designer</span></div>
+        <div class="row"><strong>State types:</strong><span class="row-text">Task, Choice (branching), Wait, Parallel, Map (iterate over array), Pass, Succeed, Fail</span></div>
+        <div class="row"><strong>Standard:</strong><span class="row-text">Up to 1 year duration; exactly-once; at-most-once execution per transition; for long-running workflows</span></div>
+        <div class="row"><strong>Express:</strong><span class="row-text">Up to 5 min; at-least-once; higher throughput; for high-volume, short-lived workflows</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-purple"></span>EventBridge</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Serverless event bus; route events between AWS services, SaaS apps, custom apps</span></div>
+        <div class="row"><strong>Event buses:</strong><span class="row-text">Default (AWS services), custom (your app), partner (SaaS: Zendesk, Stripe, etc.)</span></div>
+        <div class="row"><strong>Rules:</strong><span class="row-text">Match events by pattern; route to Lambda, SQS, SNS, Step Functions, API Gateway, etc.</span></div>
+        <div class="row"><strong>Scheduler:</strong><span class="row-text">Cron and rate-based schedules; replaced CloudWatch Events Scheduled Rules</span></div>
+        <div class="row"><strong>Schema Registry:</strong><span class="row-text">Discover, create, and manage event schemas; auto-generates code bindings</span></div>
+      </div>
+    </div>
+    <div class="tip"><strong>Serverless pattern to know:</strong> API Gateway → Lambda → DynamoDB is the classic serverless CRUD backend. Add Cognito for auth, CloudFront in front of API GW for caching/global edge, and SQS between Lambda functions for decoupling.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: HA & DR ═══════════════════ -->
+  <section id="p-ha" class="panel">
+
+    <div class="section-label">AWS Global Infrastructure</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>Region</div>
+        <div class="row"><strong>What:</strong><span class="row-text">Geographic cluster of data centers; 33+ regions worldwide</span></div>
+        <div class="row"><strong>Choosing a region:</strong><span class="row-text">Data residency laws, latency to users, service availability, pricing</span></div>
+        <div class="row"><strong>Isolated:</strong><span class="row-text">Regions are completely independent; disaster in one does NOT affect another</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>Availability Zone (AZ)</div>
+        <div class="row"><strong>What:</strong><span class="row-text">One or more discrete, isolated data centers within a region; 105+ AZs globally</span></div>
+        <div class="row"><strong>Connected:</strong><span class="row-text">Low-latency, high-bandwidth private fiber links between AZs in a region</span></div>
+        <div class="row"><strong>Best practice:</strong><span class="row-text">Deploy across ≥ 2 AZs for high availability</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>Edge Locations</div>
+        <div class="row"><strong>What:</strong><span class="row-text">CloudFront CDN PoPs; 400+ globally; cache and serve content close to users</span></div>
+        <div class="row"><strong>Local Zones:</strong><span class="row-text">AWS infra extensions to metro areas for ultra-low latency (gaming, live streaming)</span></div>
+        <div class="row"><strong>Wavelength:</strong><span class="row-text">AWS compute embedded in 5G networks; sub-10ms latency for mobile apps</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Auto Scaling Groups (ASG)</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">ASG Core Concepts</div>
+        <div class="row"><strong>Purpose:</strong><span class="row-text">Automatically add or remove EC2 instances based on demand or schedule</span></div>
+        <div class="row"><strong>Launch Template:</strong><span class="row-text">Defines what instance to launch — AMI, instance type, security groups, user data, etc.</span></div>
+        <div class="row"><strong>Min / Max / Desired:</strong><span class="row-text">Always configure all three; Desired is current target; Min protects against scale-in removing everything</span></div>
+        <div class="row"><strong>Multi-AZ:</strong><span class="row-text">ASG distributes instances across AZs and rebalances automatically</span></div>
+        <div class="row"><strong>ELB integration:</strong><span class="row-text">ASG registers new instances with ELB; removes and drains unhealthy ones</span></div>
+        <div class="row"><strong>Cooldown period:</strong><span class="row-text">Default 300s after scaling action; prevents rapid repeated scaling</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Scaling Policies</div>
+        <div class="row"><strong>Target Tracking:</strong><span class="row-text">Maintain a target metric (e.g. CPU = 50%); AWS adjusts capacity automatically — most common</span></div>
+        <div class="row"><strong>Step Scaling:</strong><span class="row-text">Scale by a configured amount when a CloudWatch alarm triggers; different steps for different breach levels</span></div>
+        <div class="row"><strong>Simple Scaling:</strong><span class="row-text">Single step on alarm; waits for cooldown before re-evaluating; legacy option</span></div>
+        <div class="row"><strong>Scheduled Scaling:</strong><span class="row-text">Scale based on known patterns (e.g. add 5 instances every weekday at 9am)</span></div>
+        <div class="row"><strong>Predictive Scaling:</strong><span class="row-text">ML-based; proactively scales before anticipated demand spikes</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Disaster Recovery Strategies</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Strategy</th><th>RTO</th><th>RPO</th><th>Cost</th><th>How it works</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Backup &amp; Restore</td><td>Hours</td><td>Hours</td>
+            <td class="dr-cost">$</td>
+            <td>Regular backups to S3/Glacier; restore infra from scratch via CloudFormation on disaster</td>
+          </tr>
+          <tr>
+            <td>Pilot Light</td><td>Tens of minutes</td><td>Minutes</td>
+            <td class="dr-cost">$$</td>
+            <td>Core systems (DBs) always running in DR region; scale out app servers only after failover</td>
+          </tr>
+          <tr>
+            <td>Warm Standby</td><td>Minutes</td><td>Seconds</td>
+            <td class="dr-cost">$$$</td>
+            <td>Reduced-scale replica running continuously in DR region; scale to full size on failover</td>
+          </tr>
+          <tr>
+            <td>Multi-Site Active/Active</td><td>Near zero (&lt;60s)</td><td>Near zero</td>
+            <td class="dr-cost">$$$$</td>
+            <td>Full-scale environment in 2+ regions simultaneously; Route 53 Weighted or Latency routing splits traffic</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">HA &amp; DR Key Terms</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Recovery Objectives</div>
+        <div class="row"><strong>RPO (Recovery Point Objective):</strong><span class="row-text">Max acceptable data loss measured in time — "how old can the data be when we recover?"</span></div>
+        <div class="row"><strong>RTO (Recovery Time Objective):</strong><span class="row-text">Max acceptable time to restore service — "how long can we be down?"</span></div>
+        <div class="row"><strong>Fault Tolerant:</strong><span class="row-text">System continues operating with zero downtime despite component failure (harder, more expensive)</span></div>
+        <div class="row"><strong>Highly Available:</strong><span class="row-text">System recovers quickly from failure with minimal downtime (practical HA target)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">HA Patterns</div>
+        <div class="row"><strong>Multi-AZ RDS:</strong><span class="row-text">Synchronous standby; auto failover; typically &lt;60–120 seconds RTO</span></div>
+        <div class="row"><strong>S3 CRR:</strong><span class="row-text">Cross-Region Replication — async; enables cross-region HA for object storage</span></div>
+        <div class="row"><strong>Route 53 Failover:</strong><span class="row-text">Active-passive with health checks; automatically routes DNS to secondary endpoint</span></div>
+        <div class="row"><strong>Aurora Global DB:</strong><span class="row-text">RPO &lt; 1s; RTO &lt; 1 min; global write forwarding; cross-region reads</span></div>
+        <div class="row"><strong>DynamoDB Global Tables:</strong><span class="row-text">Active-active multi-region; auto-replication; single-digit ms reads anywhere</span></div>
+      </div>
+    </div>
+    <div class="tip"><strong>HA ≠ DR:</strong> High Availability addresses AZ-level failures (one data center goes down). Disaster Recovery addresses region-level failures (entire region is unavailable). Both are separate design concerns and interviewers love this distinction.</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: WELL-ARCHITECTED ═══════════════════ -->
+  <section id="p-waf" class="panel">
+
+    <div class="section-label">The 6 Pillars of the AWS Well-Architected Framework</div>
+
+    <div class="pillar p-op">
+      <div class="pillar-num">PILLAR 01</div>
+      <div class="pillar-name">Operational Excellence</div>
+      <div class="pillar-desc">Run and monitor systems to deliver business value while continuously improving supporting processes. Key practices: Infrastructure as Code (CloudFormation/CDK), CI/CD pipelines, small &amp; frequent reversible changes, anticipate failure (game days), runbooks and playbooks, annotate documentation. Key services: CodePipeline, CodeDeploy, Systems Manager, CloudFormation.</div>
+    </div>
+
+    <div class="pillar p-sec">
+      <div class="pillar-num">PILLAR 02</div>
+      <div class="pillar-name">Security</div>
+      <div class="pillar-desc">Protect data, systems, and assets. Key practices: Strong identity foundation (IAM least privilege, MFA), enable traceability (CloudTrail, Config), apply security at all layers (SGs, NACLs, WAF), automate security best practices, encrypt data in transit and at rest (KMS), protect people from making mistakes (SCPs). Key services: IAM, KMS, GuardDuty, Security Hub, Shield, WAF, Macie.</div>
+    </div>
+
+    <div class="pillar p-rel">
+      <div class="pillar-num">PILLAR 03</div>
+      <div class="pillar-name">Reliability</div>
+      <div class="pillar-desc">Recover from infrastructure or service failures, dynamically acquire computing resources to meet demand. Key practices: Test recovery procedures, automatically recover from failure (Auto Scaling, Multi-AZ), scale horizontally, stop guessing capacity, manage change with automation. Key services: Auto Scaling, ELB, Multi-AZ RDS, Route 53, Backup, CloudFormation.</div>
+    </div>
+
+    <div class="pillar p-perf">
+      <div class="pillar-num">PILLAR 04</div>
+      <div class="pillar-name">Performance Efficiency</div>
+      <div class="pillar-desc">Use computing resources efficiently and maintain efficiency as demand changes. Key practices: Democratize advanced technologies (use managed services), go global in minutes (CloudFront, Multi-Region), use serverless architecture, experiment more often, mechanical sympathy (choose the right resource type). Key services: Lambda, Fargate, CloudFront, ElastiCache, DynamoDB, Compute Optimizer.</div>
+    </div>
+
+    <div class="pillar p-cost">
+      <div class="pillar-num">PILLAR 05</div>
+      <div class="pillar-name">Cost Optimization</div>
+      <div class="pillar-desc">Avoid unnecessary costs. Key practices: Implement cloud financial management, adopt a consumption model (pay only for what you use), measure overall efficiency (CloudWatch, Cost Explorer), stop spending money on undifferentiated heavy lifting (use managed services), analyze and attribute expenditure (tagging, Cost Allocation Tags). Key services: Cost Explorer, Budgets, Savings Plans, Reserved Instances, Compute Optimizer, Trusted Advisor.</div>
+    </div>
+
+    <div class="pillar p-sus">
+      <div class="pillar-num">PILLAR 06</div>
+      <div class="pillar-name">Sustainability</div>
+      <div class="pillar-desc">Minimize environmental impacts of running cloud workloads. Key practices: Understand your impact, establish sustainability goals, maximize utilization (right-size, reduce idle resources), anticipate and adopt more efficient offerings (Graviton/ARM processors), use managed services (AWS achieves higher utilization than individual customers), reduce downstream impact. Key services: Graviton instances, serverless, Compute Optimizer, Sustainability in the Well-Architected Tool.</div>
+    </div>
+
+    <div class="section-label">Well-Architected Tool</div>
+    <div class="card">
+      <div class="row"><strong>What it is:</strong><span class="row-text">Free AWS Console tool to review your architecture against the 6 pillars using questionnaires</span></div>
+      <div class="row"><strong>Output:</strong><span class="row-text">Improvement plan with prioritized recommendations and links to guidance</span></div>
+      <div class="row"><strong>Lens library:</strong><span class="row-text">Specialized lenses for SaaS, Serverless, Machine Learning, Analytics, Government, etc.</span></div>
+      <div class="row"><strong>Partner programs:</strong><span class="row-text">AWS Well-Architected Partner Program — APN partners can run formal reviews</span></div>
+    </div>
+    <div class="tip"><strong>Mnemonic:</strong> <strong style="color:var(--aws-orange)">O · S · R · P · C · S</strong> → "Oh So Reliable, Performance Costs Something" — Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability</div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: PRICING ═══════════════════ -->
+  <section id="p-pricing" class="panel">
+
+    <div class="section-label">AWS Pricing Principles</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-orange"></span>Pay for what you use</div>
+        <div class="row"><span class="row-text">No upfront costs for most services; pay per unit of consumption (seconds, GB, requests)</span></div>
+        <div class="row"><span class="row-text">Compute billed per-second (Linux EC2, Lambda) or per-hour (Windows)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-blue"></span>Pay less as you use more</div>
+        <div class="row"><span class="row-text">Tiered pricing — the more you use, the less you pay per unit</span></div>
+        <div class="row"><span class="row-text">Applies to S3 storage, EC2 data transfer, and many other services</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span>Save with reservations</div>
+        <div class="row"><span class="row-text">Commit to 1 or 3 years for significant discounts vs On-Demand</span></div>
+        <div class="row"><span class="row-text">Reserved Instances (up to 72%), Savings Plans (up to 66%)</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Cost Management Tools</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Tool</th><th>Purpose</th><th>Key capability</th></tr></thead>
+        <tbody>
+          <tr><td>Cost Explorer</td><td>Visualize, analyze, and forecast spend &amp; usage</td><td>12-month historical view; 12-month forecast; RI/SP recommendations; filter by service/tag/account</td></tr>
+          <tr><td>AWS Budgets</td><td>Set cost &amp; usage thresholds with alerts</td><td>Alert at X% of budget; trigger SNS/email; Budgets Actions can stop EC2/RDS automatically</td></tr>
+          <tr><td>Cost &amp; Usage Report (CUR)</td><td>Most granular cost data available</td><td>Hourly or daily CSV; every resource/usage type; load into Athena or Redshift for analysis</td></tr>
+          <tr><td>Pricing Calculator</td><td>Estimate cost for new architectures before building</td><td>calculator.aws — model any combination of services; export as CSV or share link</td></tr>
+          <tr><td>Savings Plans</td><td>Flexible discount model — commit $/hr compute spend</td><td>Compute SP (most flexible — EC2/Lambda/Fargate any region/family); EC2 SP (higher discount, specific family)</td></tr>
+          <tr><td>Reserved Instances</td><td>Commit to specific instance for 1 or 3 years</td><td>Standard RI (up to 72%, fixed); Convertible RI (up to 54%, can change family/OS/tenancy)</td></tr>
+          <tr><td>Cost Allocation Tags</td><td>Tag resources to attribute costs to teams/projects</td><td>AWS-generated + user-defined; activated in Billing Console; appears in CUR</td></tr>
+          <tr><td>Compute Optimizer</td><td>Right-sizing recommendations</td><td>Identifies over-provisioned EC2, Lambda, EBS; estimates potential savings</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">AWS Support Plans</div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th>Plan</th><th>Starting price</th><th>Critical case response</th><th>Key benefits</th></tr></thead>
+        <tbody>
+          <tr><td>Basic</td><td>Free (all accounts)</td><td>No technical support</td><td>Documentation, forums, Trusted Advisor (7 core checks), Personal Health Dashboard</td></tr>
+          <tr><td>Developer</td><td>$29/month (or 3% of monthly spend)</td><td>Not available</td><td>1 primary contact, business hours email support, general guidance &lt;24 hr, system impaired &lt;12 hr</td></tr>
+          <tr><td>Business</td><td>$100/month (or % of spend)</td><td>Production system down: &lt;1 hour</td><td>Unlimited contacts, 24/7 phone/chat/email, full Trusted Advisor, AWS Health API, Infrastructure Event Management (extra fee)</td></tr>
+          <tr><td>Enterprise On-Ramp</td><td>$5,500/month (or % of spend)</td><td>Business-critical system down: &lt;30 min</td><td>Pool of Technical Account Managers, Concierge Support Team, annual architecture reviews, proactive programs</td></tr>
+          <tr><td>Enterprise</td><td>$15,000/month (or % of spend)</td><td>Business-critical system down: &lt;15 min</td><td>Dedicated TAM, Concierge Support, proactive guidance, Well-Architected Reviews, training credits</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Free Tier — Always Free vs 12-Month Free</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Always Free (no expiry)</div>
+        <div class="row"><strong>Lambda:</strong><span class="row-text">1 million requests/month + 400,000 GB-seconds compute/month</span></div>
+        <div class="row"><strong>DynamoDB:</strong><span class="row-text">25 GB storage + 25 WCU + 25 RCU</span></div>
+        <div class="row"><strong>CloudFront:</strong><span class="row-text">1 TB data transfer out + 10 million HTTP/S requests/month</span></div>
+        <div class="row"><strong>CloudWatch:</strong><span class="row-text">10 custom metrics + 10 alarms + 1 million API requests</span></div>
+        <div class="row"><strong>SNS:</strong><span class="row-text">1 million publish API requests; email delivery always free</span></div>
+        <div class="row"><strong>SQS:</strong><span class="row-text">1 million requests/month</span></div>
+        <div class="row"><strong>Cognito:</strong><span class="row-text">50,000 monthly active users in User Pools</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">12-Month Free (new accounts only)</div>
+        <div class="row"><strong>EC2:</strong><span class="row-text">750 hours/month of t2.micro or t3.micro (Linux/Windows)</span></div>
+        <div class="row"><strong>S3:</strong><span class="row-text">5 GB standard storage + 20,000 GET + 2,000 PUT requests</span></div>
+        <div class="row"><strong>RDS:</strong><span class="row-text">750 hours/month of db.t2.micro or db.t3.micro (MySQL, PostgreSQL, MariaDB)</span></div>
+        <div class="row"><strong>CloudFront:</strong><span class="row-text">1 TB data transfer out</span></div>
+        <div class="row"><strong>EBS:</strong><span class="row-text">30 GB of SSD storage (gp2/gp3 or magnetic)</span></div>
+        <div class="row"><strong>Elastic Load Balancer:</strong><span class="row-text">750 hours/month of Classic or Application Load Balancer</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PANEL: QUICK RECALL ═══════════════════ -->
+  <section id="p-recall" class="panel">
+
+    <div class="section-label">Keyword → Service (Fast-Fire Recall)</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">If the question says…</div>
+        <div class="row"><strong>"serverless"</strong><span class="row-text">→ Lambda, Fargate, DynamoDB, Aurora Serverless, S3, API Gateway</span></div>
+        <div class="row"><strong>"containers"</strong><span class="row-text">→ ECS (Docker, AWS orchestrator), EKS (Kubernetes), Fargate (serverless containers), ECR (registry)</span></div>
+        <div class="row"><strong>"shared file system / NFS"</strong><span class="row-text">→ EFS (not EBS — EBS is one AZ, one instance)</span></div>
+        <div class="row"><strong>"decouple / async / buffer"</strong><span class="row-text">→ SQS (queue for decoupling), SNS (pub/sub fan-out)</span></div>
+        <div class="row"><strong>"real-time data streaming"</strong><span class="row-text">→ Kinesis Data Streams; Kinesis Firehose to deliver to S3/Redshift</span></div>
+        <div class="row"><strong>"CDN / edge caching"</strong><span class="row-text">→ CloudFront</span></div>
+        <div class="row"><strong>"DNS / routing"</strong><span class="row-text">→ Route 53</span></div>
+        <div class="row"><strong>"cache / reduce DB load"</strong><span class="row-text">→ ElastiCache (Redis or Memcached); DAX for DynamoDB specifically</span></div>
+        <div class="row"><strong>"data warehouse / BI / OLAP"</strong><span class="row-text">→ Redshift; Redshift Spectrum to query S3</span></div>
+        <div class="row"><strong>"audit trail / who called what API"</strong><span class="row-text">→ CloudTrail (NOT CloudWatch)</span></div>
+        <div class="row"><strong>"performance monitoring / metrics"</strong><span class="row-text">→ CloudWatch (metrics, alarms, logs, dashboards)</span></div>
+        <div class="row"><strong>"config drift / compliance"</strong><span class="row-text">→ AWS Config</span></div>
+        <div class="row"><strong>"best practice recommendations"</strong><span class="row-text">→ Trusted Advisor</span></div>
+        <div class="row"><strong>"graph database"</strong><span class="row-text">→ Neptune</span></div>
+        <div class="row"><strong>"time-series / IoT data"</strong><span class="row-text">→ Timestream</span></div>
+        <div class="row"><strong>"immutable audit ledger"</strong><span class="row-text">→ QLDB</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">More keywords…</div>
+        <div class="row"><strong>"encrypt / manage keys"</strong><span class="row-text">→ KMS (managed, software-based); CloudHSM (dedicated hardware FIPS 140-2 L3)</span></div>
+        <div class="row"><strong>"detect threats / intrusion detection"</strong><span class="row-text">→ GuardDuty (analyses logs, ML-based)</span></div>
+        <div class="row"><strong>"scan for vulnerabilities / CVE"</strong><span class="row-text">→ Amazon Inspector (EC2 and container images)</span></div>
+        <div class="row"><strong>"find PII in S3"</strong><span class="row-text">→ Amazon Macie</span></div>
+        <div class="row"><strong>"DDoS protection"</strong><span class="row-text">→ Shield Standard (free, automatic); Shield Advanced (paid, 24/7 DRT)</span></div>
+        <div class="row"><strong>"block SQLi / XSS / web attacks"</strong><span class="row-text">→ WAF (Web Application Firewall)</span></div>
+        <div class="row"><strong>"store secrets / DB password rotation"</strong><span class="row-text">→ Secrets Manager (auto-rotates); SSM Parameter Store (manual, cheaper)</span></div>
+        <div class="row"><strong>"IaC / infrastructure as code"</strong><span class="row-text">→ CloudFormation (JSON/YAML); CDK (Python/TypeScript/etc. compiles to CFN)</span></div>
+        <div class="row"><strong>"hybrid cloud / on-prem integration"</strong><span class="row-text">→ Direct Connect (fiber), Storage Gateway, Outposts (AWS in your DC)</span></div>
+        <div class="row"><strong>"migrate database to AWS"</strong><span class="row-text">→ DMS (Database Migration Service); Schema Conversion Tool (SCT) for heterogeneous migrations</span></div>
+        <div class="row"><strong>"move petabytes physically"</strong><span class="row-text">→ Snowball Edge (80 TB); Snowmobile (100 PB per truck)</span></div>
+        <div class="row"><strong>"orchestrate multi-step workflow"</strong><span class="row-text">→ Step Functions</span></div>
+        <div class="row"><strong>"SSH without bastion / SSH keys"</strong><span class="row-text">→ Systems Manager Session Manager</span></div>
+        <div class="row"><strong>"user sign-up / authentication for your app"</strong><span class="row-text">→ Cognito (User Pools = user directory; Identity Pools = AWS access federation)</span></div>
+        <div class="row"><strong>"cross-account access"</strong><span class="row-text">→ IAM Roles (assume role from another account); AWS Organizations + SCPs for guardrails</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Common Interview Q&amp;As</div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: What's the difference between S3 and EBS?</div>
+      <div class="qa-a"><strong>S3</strong> = object storage, accessed via HTTP API/URL, not mountable as a drive, infinite scale, globally accessible. <strong>EBS</strong> = block storage (like a hard drive), attached to one EC2 instance, tied to one AZ, low-latency random I/O. Choose EBS for OS and databases; choose S3 for static files, backups, media, and large-scale data.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: What's the difference between SQS and SNS?</div>
+      <div class="qa-a"><strong>SQS</strong> = pull-based queue; one consumer (or consumer group) processes and deletes each message; great for decoupling services. <strong>SNS</strong> = push-based pub/sub; one message published → all subscribers receive it simultaneously. Often used together: SNS fan-out to multiple SQS queues for parallel processing.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: What's a Region vs an Availability Zone?</div>
+      <div class="qa-a"><strong>Region</strong> = independent geographic location (e.g. us-east-1 = Northern Virginia). Has multiple AZs. Data does not leave the region unless you explicitly configure it. <strong>AZ</strong> = one or more physically separate data centers within a region, connected by low-latency links. Deploy across ≥2 AZs for HA; across ≥2 Regions for DR.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: How do EC2 instances securely access S3 without hardcoding credentials?</div>
+      <div class="qa-a">Attach an <strong>IAM Role</strong> to the EC2 instance profile with the appropriate S3 permissions. The EC2 instance retrieves temporary credentials automatically via the Instance Metadata Service (IMDS). The application uses the SDK which automatically finds these credentials. Never store access keys in code, environment variables baked into AMIs, or in S3 buckets.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: What's "stateless" application design and why does it matter in AWS?</div>
+      <div class="qa-a">A <strong>stateless</strong> app doesn't store session data in the instance's local memory or disk. Any server can handle any request. This enables <strong>Auto Scaling</strong> — you can add/remove instances freely. Store state externally in ElastiCache (sessions), DynamoDB (data), or S3 (files). The opposite (stateful) makes scaling and failover much harder.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: What is the AWS Shared Responsibility Model?</div>
+      <div class="qa-a">AWS is responsible for "Security <em>OF</em> the Cloud" — the physical infrastructure, hardware, hypervisor, managed service software. Customers are responsible for "Security <em>IN</em> the Cloud" — OS patching on EC2, application code, IAM configuration, data encryption, network/firewall config. The boundary shifts for managed services: RDS means AWS patches the DB engine, but you configure Security Groups and encryption.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q">Q: Multi-AZ vs Read Replicas in RDS — what's the difference?</div>
+      <div class="qa-a"><strong>Multi-AZ</strong> = synchronous replication to a standby in another AZ; automatic failover; the standby cannot serve read traffic; purely for high availability. <strong>Read Replicas</strong> = asynchronous replication; can serve read queries to scale read throughput; can be cross-region; can be promoted to standalone DB; NOT for automatic failover.</div>
+    </div>
+
+    <div class="section-label">Numbers to Memorize</div>
+    <div class="pill-row">
+      <span class="pill">33+ Regions</span>
+      <span class="pill">105+ AZs</span>
+      <span class="pill">400+ Edge Locations</span>
+      <span class="pill">S3 durability: 11 nines (99.999999999%)</span>
+      <span class="pill">Lambda max timeout: 15 minutes</span>
+      <span class="pill">Lambda memory: 128 MB – 10 GB</span>
+      <span class="pill">Lambda concurrency default: 1,000/region</span>
+      <span class="pill">S3 max object: 5 TB</span>
+      <span class="pill">S3 multipart above: 5 GB</span>
+      <span class="pill">EC2 Reserved savings: up to 72%</span>
+      <span class="pill">Spot savings: up to 90%</span>
+      <span class="pill">Savings Plans savings: up to 66%</span>
+      <span class="pill">DynamoDB: single-digit ms latency</span>
+      <span class="pill">RDS backup retention: 1–35 days</span>
+      <span class="pill">Aurora: up to 15 read replicas</span>
+      <span class="pill">SQS max retention: 14 days</span>
+      <span class="pill">SQS max msg size: 256 KB</span>
+      <span class="pill">SQS FIFO: 300 msg/s (3,000 w/ batching)</span>
+      <span class="pill">CloudTrail free retention: 90 days</span>
+      <span class="pill">Snowball Edge: ~80 TB usable</span>
+      <span class="pill">Snowmobile: 100 PB per truck</span>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer class="footer">
+  AWS Interview Cheat Sheet &nbsp;·&nbsp; Cloud Practitioner + Entry-Level Roles &nbsp;·&nbsp; <span>Study hard, get that offer.</span>
+</footer>
+
+<!-- ═══════════════════════════════ JS ═══════════════════════════════ -->
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('p-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
